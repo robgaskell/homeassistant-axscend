@@ -1,12 +1,12 @@
 {
-  "domain": "integration_blueprint",
-  "name": "Integration blueprint",
+  "domain": "homeassistant_axscend",
+  "name": "Axscend Integration",
   "codeowners": [
-    "@ludeeus"
+    "@robgaskell"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/ludeeus/integration_blueprint",
+  "documentation": "https://github.com/robgaskell/homeassistant_axscend",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/ludeeus/integration_blueprint/issues",
+  "issue_tracker": "https://github.com/robgaskell/homeassistant_axscend/issues",
   "version": "0.1.0"
 }
