@@ -1,4 +1,4 @@
-"""Sample API Client."""
+"""Axscend API Client."""
 
 from __future__ import annotations
 
@@ -7,6 +7,8 @@ from typing import Any
 
 import aiohttp
 import async_timeout
+
+from .const import API_BASE_URL, API_TIMEOUT, API_USER_AGENT, LOGGER
 
 
 class AxscendApiClientError(Exception):
@@ -40,29 +42,18 @@ class AxscendApiClient:
 
     def __init__(
         self,
-        username: str,
-        password: str,
+        api_token: str,
         session: aiohttp.ClientSession,
     ) -> None:
-        """Sample API Client."""
-        self._username = username
-        self._password = password
+        """Axscend API Client."""
+        self._api_token = api_token
         self._session = session
 
-    async def async_get_data(self) -> Any:
-        """Get data from the API."""
+    async def async_get_asset(self, asset_id: str) -> Any:
+        """Get asset data with location from the API."""
         return await self._api_wrapper(
             method="get",
-            url="https://jsonplaceholder.typicode.com/posts/1",
-        )
-
-    async def async_set_title(self, value: str) -> Any:
-        """Get data from the API."""
-        return await self._api_wrapper(
-            method="patch",
-            url="https://jsonplaceholder.typicode.com/posts/1",
-            data={"title": value},
-            headers={"Content-type": "application/json; charset=UTF-8"},
+            url=f"{API_BASE_URL}/assets/{asset_id}",
         )
 
     async def _api_wrapper(
@@ -74,7 +65,12 @@ class AxscendApiClient:
     ) -> Any:
         """Get information from the API."""
         try:
-            async with async_timeout.timeout(10):
+            if headers is None:
+                headers = {}
+            headers["Authorization"] = f"Bearer {self._api_token}"
+            headers["User-Agent"] = f"{API_USER_AGENT}"
+
+            async with async_timeout.timeout(API_TIMEOUT):
                 response = await self._session.request(
                     method=method,
                     url=url,

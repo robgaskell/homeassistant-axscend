@@ -10,7 +10,7 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME, Platform
+from homeassistant.const import CONF_API_TOKEN, CONF_ASSET_ID, Platform
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
 
@@ -41,14 +41,14 @@ async def async_setup_entry(
         hass=hass,
         logger=LOGGER,
         name=DOMAIN,
-        update_interval=timedelta(hours=1),
+        update_interval=timedelta(minutes=5),
     )
     entry.runtime_data = AxscendData(
         client=AxscendApiClient(
-            username=entry.data[CONF_USERNAME],
-            password=entry.data[CONF_PASSWORD],
+            api_token=entry.data[CONF_API_TOKEN],
             session=async_get_clientsession(hass),
         ),
+        asset_id=entry.data[CONF_ASSET_ID],
         integration=async_get_loaded_integration(hass, entry.domain),
         coordinator=coordinator,
     )

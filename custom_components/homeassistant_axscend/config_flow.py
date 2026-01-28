@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.const import CONF_API_TOKEN, CONF_ASSET_ID
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from slugify import slugify
 
 from .api import (
     AxscendApiClient,
@@ -23,6 +22,10 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    def __init__(self) -> None:
+        """Initialize the flow handler."""
+        self._asset_name: str | None = None
+
     async def async_step_user(
         self,
         user_input: dict | None = None,
@@ -32,8 +35,8 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             try:
                 await self._test_credentials(
-                    username=user_input[CONF_USERNAME],
-                    password=user_input[CONF_PASSWORD],
+                    api_token=user_input[CONF_API_TOKEN],
+                    asset_id=user_input[CONF_ASSET_ID],
                 )
             except AxscendApiClientAuthenticationError as exception:
                 LOGGER.warning(exception)
@@ -49,11 +52,12 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     ## Do NOT use this in production code
                     ## The unique_id should never be something that can change
                     ## https://developers.home-assistant.io/docs/config_entries_config_flow_handler#unique-ids
-                    unique_id=slugify(user_input[CONF_USERNAME])
+                    unique_id=user_input[CONF_ASSET_ID]
                 )
                 self._abort_if_unique_id_configured()
+                title = f"Axscend Asset '{self._asset_name}' ({user_input[CONF_ASSET_ID]})"
                 return self.async_create_entry(
-                    title=user_input[CONF_USERNAME],
+                    title=title,
                     data=user_input,
                 )
 
@@ -62,16 +66,19 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_USERNAME,
-                        default=(user_input or {}).get(CONF_USERNAME, vol.UNDEFINED),
+                        CONF_API_TOKEN,
+                        default=(user_input or {}).get(CONF_API_TOKEN, vol.UNDEFINED),
+                    ): selector.TextSelector(
+                        selector.TextSelectorConfig(
+                            type=selector.TextSelectorType.PASSWORD,
+                        ),
+                    ),
+                    vol.Required(
+                        CONF_ASSET_ID,
+                        default=(user_input or {}).get(CONF_ASSET_ID, vol.UNDEFINED),
                     ): selector.TextSelector(
                         selector.TextSelectorConfig(
                             type=selector.TextSelectorType.TEXT,
-                        ),
-                    ),
-                    vol.Required(CONF_PASSWORD): selector.TextSelector(
-                        selector.TextSelectorConfig(
-                            type=selector.TextSelectorType.PASSWORD,
                         ),
                     ),
                 },
@@ -79,11 +86,12 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=_errors,
         )
 
-    async def _test_credentials(self, username: str, password: str) -> None:
-        """Validate credentials."""
+    async def _test_credentials(self, api_token: str, asset_id: str) -> None:
+        """Validate credentials and fetch asset details."""
         client = AxscendApiClient(
-            username=username,
-            password=password,
+            api_token=api_token,
             session=async_create_clientsession(self.hass),
         )
-        await client.async_get_data()
+        response = await client.async_get_asset(asset_id=asset_id)
+        # Extract asset name from response
+        self._asset_name = response.get("data", {}).get("asset", {}).get("name", asset_id)

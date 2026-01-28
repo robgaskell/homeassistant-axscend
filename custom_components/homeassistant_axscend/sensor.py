@@ -17,9 +17,14 @@ if TYPE_CHECKING:
 
 ENTITY_DESCRIPTIONS = (
     SensorEntityDescription(
-        key="homeassistant_axscend",
-        name="Integration Sensor",
-        icon="mdi:format-quote-close",
+        key="latitude",
+        name="Latitude",
+        icon="mdi:latitude",
+    ),
+    SensorEntityDescription(
+        key="longitude",
+        name="Longitude",
+        icon="mdi:longitude",
     ),
 )
 
@@ -31,7 +36,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up the sensor platform."""
     async_add_entities(
-        IntegrationBlueprintSensor(
+        AxscendAssetSensor(
             coordinator=entry.runtime_data.coordinator,
             entity_description=entity_description,
         )
@@ -39,8 +44,8 @@ async def async_setup_entry(
     )
 
 
-class IntegrationBlueprintSensor(IntegrationBlueprintEntity, SensorEntity):
-    """homeassistant_axscend Sensor class."""
+class AxscendAssetSensor(IntegrationBlueprintEntity, SensorEntity):
+    """Axscend Asset Sensor class."""
 
     def __init__(
         self,
@@ -54,4 +59,15 @@ class IntegrationBlueprintSensor(IntegrationBlueprintEntity, SensorEntity):
     @property
     def native_value(self) -> str | None:
         """Return the native value of the sensor."""
-        return self.coordinator.data.get("body")
+        if not self.coordinator.data:
+            return None
+
+        data = self.coordinator.data.get("data", {})
+        asset_data = data.get("asset", {})
+
+        if self.entity_description.key == "latitude":
+            return str(asset_data.get("gps_latitude")) if asset_data.get("gps_latitude") else None
+        elif self.entity_description.key == "longitude":
+            return str(asset_data.get("gps_longitude")) if asset_data.get("gps_longitude") else None
+
+        return None

@@ -23,3 +23,5 @@ class AxscendData:
     client: AxscendApiClient
     coordinator: AxscendDataUpdateCoordinator
     integration: Integration
+    asset_id: str
+
