@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
     from .api import AxscendApiClient
     from .coordinator import AxscendDataUpdateCoordinator
+    from aiohttp import ClientSession
 
 
 type AxscendConfigEntry = ConfigEntry[AxscendData]
@@ -24,4 +25,5 @@ class AxscendData:
     coordinator: AxscendDataUpdateCoordinator
     integration: Integration
     asset_id: str
+    session: ClientSession
 

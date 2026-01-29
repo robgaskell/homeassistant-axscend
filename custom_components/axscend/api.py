@@ -8,7 +8,7 @@ from typing import Any
 import aiohttp
 import async_timeout
 
-from .const import API_BASE_URL, API_TIMEOUT, API_USER_AGENT, LOGGER
+from .const import API_BASE_URL, API_TIMEOUT, API_USER_AGENT
 
 
 class AxscendApiClientError(Exception):

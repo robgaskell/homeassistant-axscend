@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from logging import Logger
 from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
@@ -55,6 +56,11 @@ class AxscendAssetSensor(IntegrationBlueprintEntity, SensorEntity):
         """Initialize the sensor class."""
         super().__init__(coordinator)
         self.entity_description = entity_description
+        asset_id = coordinator.config_entry.runtime_data.asset_id
+        # Ensure unique ID per entity
+        self._attr_unique_id = (
+            f"{coordinator.config_entry.entry_id}_{asset_id}_{entity_description.key}"
+        )
 
     @property
     def native_value(self) -> str | None:
@@ -62,12 +68,19 @@ class AxscendAssetSensor(IntegrationBlueprintEntity, SensorEntity):
         if not self.coordinator.data:
             return None
 
-        data = self.coordinator.data.get("data", {})
-        asset_data = data.get("asset", {})
+        asset_data = self.coordinator.data.get("asset", {})
 
         if self.entity_description.key == "latitude":
-            return str(asset_data.get("gps_latitude")) if asset_data.get("gps_latitude") else None
+            return (
+                str(asset_data.get("gps_latitude"))
+                if asset_data.get("gps_latitude")
+                else None
+            )
         elif self.entity_description.key == "longitude":
-            return str(asset_data.get("gps_longitude")) if asset_data.get("gps_longitude") else None
+            return (
+                str(asset_data.get("gps_longitude"))
+                if asset_data.get("gps_longitude")
+                else None
+            )
 
         return None

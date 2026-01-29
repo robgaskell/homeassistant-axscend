@@ -10,12 +10,13 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.const import CONF_API_TOKEN, CONF_ASSET_ID, Platform
+from homeassistant.const import CONF_API_TOKEN, Platform
+import aiohttp
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.loader import async_get_loaded_integration
 
 from .api import AxscendApiClient
-from .const import DOMAIN, LOGGER
+from .const import CONF_ASSET_ID, DOMAIN, LOGGER
 from .coordinator import AxscendDataUpdateCoordinator
 from .data import AxscendData
 
@@ -42,14 +43,21 @@ async def async_setup_entry(
         name=DOMAIN,
         update_interval=timedelta(minutes=5),
     )
+    # Create a dedicated session using ThreadedResolver to avoid aiodns issues
+    connector = aiohttp.TCPConnector(resolver=aiohttp.resolver.ThreadedResolver())
+    # Create a dedicated ClientSession instead of using Home Assistant helper
+    # to avoid passing connector twice into aiohttp.ClientSession
+    session = aiohttp.ClientSession(connector=connector)
+
     entry.runtime_data = AxscendData(
         client=AxscendApiClient(
             api_token=entry.data[CONF_API_TOKEN],
-            session=async_get_clientsession(hass),
+            session=session,
         ),
         asset_id=entry.data[CONF_ASSET_ID],
         integration=async_get_loaded_integration(hass, entry.domain),
         coordinator=coordinator,
+        session=session,
     )
 
     # https://developers.home-assistant.io/docs/integration_fetching_data#coordinated-single-api-poll-for-data-for-all-entities
@@ -66,7 +74,14 @@ async def async_unload_entry(
     entry: AxscendConfigEntry,
 ) -> bool:
     """Handle removal of an entry."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unloaded:
+        # Close our dedicated aiohttp session
+        try:
+            await entry.runtime_data.session.close()
+        except Exception:
+            LOGGER.exception("Error closing client session for %s", entry.entry_id)
+    return unloaded
 
 
 async def async_reload_entry(

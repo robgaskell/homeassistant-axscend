@@ -35,15 +35,18 @@ HOME_DISTANCE_THRESHOLD = 100
 def _haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """Calculate distance between two GPS coordinates in meters using Haversine formula."""
     R = 6371000  # Earth's radius in meters
-    
+
     lat1_rad = math.radians(lat1)
     lat2_rad = math.radians(lat2)
     delta_lat = math.radians(lat2 - lat1)
     delta_lon = math.radians(lon2 - lon1)
-    
-    a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+
+    a = (
+        math.sin(delta_lat / 2) ** 2
+        + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+    )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    
+
     return R * c
 
 
@@ -76,6 +79,11 @@ class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
         super().__init__(coordinator)
         self.entity_description = entity_description
         self.hass = hass
+        asset_id = coordinator.config_entry.runtime_data.asset_id
+        # Ensure unique ID per entity
+        self._attr_unique_id = (
+            f"{coordinator.config_entry.entry_id}_{asset_id}_{entity_description.key}"
+        )
 
     @property
     def is_on(self) -> bool:
@@ -91,8 +99,7 @@ class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
             return False
 
         # Get asset GPS coordinates
-        data = self.coordinator.data.get("data", {})
-        asset_data = data.get("asset", {})
+        asset_data = self.coordinator.data.get("asset", {})
 
         asset_latitude = asset_data.get("gps_latitude")
         asset_longitude = asset_data.get("gps_longitude")

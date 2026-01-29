@@ -11,6 +11,7 @@ from .api import (
     AxscendApiClientAuthenticationError,
     AxscendApiClientError,
 )
+from .const import LOGGER
 
 if TYPE_CHECKING:
     from .data import AxscendConfigEntry
@@ -25,10 +26,14 @@ class AxscendDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self) -> Any:
         """Update data via library."""
         try:
-            return await self.config_entry.runtime_data.client.async_get_asset(
+            response = await self.config_entry.runtime_data.client.async_get_asset(
                 asset_id=self.config_entry.runtime_data.asset_id
             )
+            LOGGER.debug("Coordinator fetched data: %s", response)
+            return response
         except AxscendApiClientAuthenticationError as exception:
+            LOGGER.warning("Authentication failed during update: %s", exception)
             raise ConfigEntryAuthFailed(exception) from exception
         except AxscendApiClientError as exception:
+            LOGGER.error("API error during update: %s", exception)
             raise UpdateFailed(exception) from exception

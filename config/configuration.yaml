@@ -9,4 +9,4 @@ homeassistant:
 logger:
   default: info
   logs:
-    custom_components.homeassistant_axscend: debug
+    custom_components.axscend: debug

@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.const import CONF_API_TOKEN, CONF_ASSET_ID
+from homeassistant.const import CONF_API_TOKEN
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
+import aiohttp
 
 from .api import (
     AxscendApiClient,
@@ -14,7 +15,7 @@ from .api import (
     AxscendApiClientCommunicationError,
     AxscendApiClientError,
 )
-from .const import DOMAIN, LOGGER
+from .const import CONF_ASSET_ID, DOMAIN, LOGGER
 
 
 class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -55,7 +56,9 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     unique_id=user_input[CONF_ASSET_ID]
                 )
                 self._abort_if_unique_id_configured()
-                title = f"Axscend Asset '{self._asset_name}' ({user_input[CONF_ASSET_ID]})"
+                title = (
+                    f"Axscend Asset '{self._asset_name}' ({user_input[CONF_ASSET_ID]})"
+                )
                 return self.async_create_entry(
                     title=title,
                     data=user_input,
@@ -88,10 +91,16 @@ class AxscendFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def _test_credentials(self, api_token: str, asset_id: str) -> None:
         """Validate credentials and fetch asset details."""
-        client = AxscendApiClient(
-            api_token=api_token,
-            session=async_create_clientsession(self.hass),
-        )
-        response = await client.async_get_asset(asset_id=asset_id)
-        # Extract asset name from response
-        self._asset_name = response.get("data", {}).get("asset", {}).get("name", asset_id)
+        # Use ThreadedResolver to avoid aiodns compatibility issues with Python 3.13
+        connector = aiohttp.TCPConnector(resolver=aiohttp.resolver.ThreadedResolver())
+        session = aiohttp.ClientSession(connector=connector)
+        try:
+            client = AxscendApiClient(
+                api_token=api_token,
+                session=session,
+            )
+            response = await client.async_get_asset(asset_id=asset_id)
+            # Extract asset name from response
+            self._asset_name = response.get("asset", {}).get("name", asset_id)
+        finally:
+            await session.close()
