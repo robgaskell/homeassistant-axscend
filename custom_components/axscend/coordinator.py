@@ -30,10 +30,11 @@ class AxscendDataUpdateCoordinator(DataUpdateCoordinator):
                 asset_id=self.config_entry.runtime_data.asset_id
             )
             LOGGER.debug("Coordinator fetched data: %s", response)
-            return response
         except AxscendApiClientAuthenticationError as exception:
             LOGGER.warning("Authentication failed during update: %s", exception)
             raise ConfigEntryAuthFailed(exception) from exception
         except AxscendApiClientError as exception:
             LOGGER.error("API error during update: %s", exception)
             raise UpdateFailed(exception) from exception
+        else:
+            return response

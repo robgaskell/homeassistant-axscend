@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from logging import Logger
 from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
@@ -76,7 +75,7 @@ class AxscendAssetSensor(IntegrationBlueprintEntity, SensorEntity):
                 if asset_data.get("gps_latitude")
                 else None
             )
-        elif self.entity_description.key == "longitude":
+        if self.entity_description.key == "longitude":
             return (
                 str(asset_data.get("gps_longitude"))
                 if asset_data.get("gps_longitude")

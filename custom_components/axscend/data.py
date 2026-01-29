@@ -6,12 +6,12 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from aiohttp import ClientSession
     from homeassistant.config_entries import ConfigEntry
     from homeassistant.loader import Integration
 
     from .api import AxscendApiClient
     from .coordinator import AxscendDataUpdateCoordinator
-    from aiohttp import ClientSession
 
 
 type AxscendConfigEntry = ConfigEntry[AxscendData]
@@ -26,4 +26,3 @@ class AxscendData:
     integration: Integration
     asset_id: str
     session: ClientSession
-

@@ -33,8 +33,12 @@ HOME_DISTANCE_THRESHOLD = 100
 
 
 def _haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Calculate distance between two GPS coordinates in meters using Haversine formula."""
-    R = 6371000  # Earth's radius in meters
+    """
+    Calculate distance between two GPS coordinates in meters.
+
+    Uses Haversine formula.
+    """
+    r = 6371000  # Earth's radius in meters
 
     lat1_rad = math.radians(lat1)
     lat2_rad = math.radians(lat2)
@@ -47,11 +51,11 @@ def _haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> f
     )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
 
-    return R * c
+    return r * c
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
+    hass: HomeAssistant,
     entry: AxscendConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:

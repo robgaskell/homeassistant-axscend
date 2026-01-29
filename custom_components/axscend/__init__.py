@@ -10,9 +10,8 @@ from __future__ import annotations
 from datetime import timedelta
 from typing import TYPE_CHECKING
 
-from homeassistant.const import CONF_API_TOKEN, Platform
 import aiohttp
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.const import CONF_API_TOKEN, Platform
 from homeassistant.loader import async_get_loaded_integration
 
 from .api import AxscendApiClient
@@ -79,7 +78,7 @@ async def async_unload_entry(
         # Close our dedicated aiohttp session
         try:
             await entry.runtime_data.session.close()
-        except Exception:
+        except aiohttp.ClientError:
             LOGGER.exception("Error closing client session for %s", entry.entry_id)
     return unloaded
 
