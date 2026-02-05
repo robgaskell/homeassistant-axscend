@@ -1,5 +1,5 @@
 {
-  "domain": "homeassistant_axscend",
+  "domain": "axscend",
   "name": "Axscend Integration",
   "codeowners": [
     "@robgaskell"
