@@ -28,9 +28,6 @@ ENTITY_DESCRIPTIONS = (
     ),
 )
 
-# Distance threshold in meters (approximately 100m)
-HOME_DISTANCE_THRESHOLD = 100
-
 
 def _haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     """
@@ -91,7 +88,7 @@ class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
 
     @property
     def is_on(self) -> bool:
-        """Return true if the asset is within 100m of home location."""
+        """Return true if the asset is within the home location radius."""
         if not self.coordinator.data:
             return False
 
@@ -101,6 +98,10 @@ class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
 
         if home_latitude is None or home_longitude is None:
             return False
+
+        # Get home location radius from Home Assistant configuration
+        # Default to 100m if not configured
+        home_radius = self.hass.config.radius if self.hass.config.radius is not None else 100
 
         # Get asset GPS coordinates
         asset_data = self.coordinator.data.get("asset", {})
@@ -116,5 +117,5 @@ class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
             home_latitude, home_longitude, asset_latitude, asset_longitude
         )
 
-        # Return true if within threshold
-        return distance <= HOME_DISTANCE_THRESHOLD
+        # Return true if within home location radius
+        return distance <= home_radius
