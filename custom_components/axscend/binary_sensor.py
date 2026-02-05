@@ -1,4 +1,4 @@
-"""Binary sensor platform for homeassistant_axscend."""
+"""Binary sensor platform for axscend."""
 
 from __future__ import annotations
 

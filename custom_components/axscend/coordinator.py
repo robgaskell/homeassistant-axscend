@@ -1,4 +1,4 @@
-"""DataUpdateCoordinator for homeassistant_axscend."""
+"""DataUpdateCoordinator for axscend."""
 
 from __future__ import annotations
 

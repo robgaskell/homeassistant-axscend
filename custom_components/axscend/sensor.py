@@ -1,4 +1,4 @@
-"""Sensor platform for homeassistant_axscend."""
+"""Sensor platform for axscend."""
 
 from __future__ import annotations
 

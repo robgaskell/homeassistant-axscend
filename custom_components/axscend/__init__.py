@@ -1,5 +1,5 @@
 """
-Custom integration to integrate homeassistant_axscend with Home Assistant.
+Custom integration to integrate axscend with Home Assistant.
 
 For more details about this integration, please refer to
 https://github.com/robgaskell/homeassistant-axscend

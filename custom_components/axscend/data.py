@@ -1,4 +1,4 @@
-"""Custom types for homeassistant_axscend."""
+"""Custom types for axscend."""
 
 from __future__ import annotations
 

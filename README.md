@@ -4,7 +4,7 @@
 
 ## Axscend Integration for Home Assistant
 
-**Axscend Integration** (`homeassistant_axscend`) is a custom integration for [Home Assistant](https://www.home-assistant.io/) that connects to the [Axscend Portal](https://portal.axscend.com/) telematics platform.  
+**Axscend Integration** (`axscend`) is a custom integration for [Home Assistant](https://www.home-assistant.io/) that connects to the [Axscend Portal](https://portal.axscend.com/) telematics platform.  
 It lets Home Assistant monitor the location and status of an Axscend asset (for example, a trailer) using the Axscend cloud API.
 
 > **Note**: This is an unofficial community integration and is not affiliated with or endorsed by Axscend Ltd.
