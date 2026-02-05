@@ -2,7 +2,7 @@
     "config": {
         "step": {
             "user": {
-                "description": "If you need help with the configuration have a look here: https://github.com/robgaskell/homeassistant_axscend",
+                "description": "If you need help with the configuration have a look here: https://github.com/robgaskell/homeassistant-axscend",
                 "data": {
                     "username": "Username",
                     "password": "Password"

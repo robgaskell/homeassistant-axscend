@@ -2,7 +2,7 @@
 Custom integration to integrate homeassistant_axscend with Home Assistant.
 
 For more details about this integration, please refer to
-https://github.com/robgaskell/homeassistant_axscend
+https://github.com/robgaskell/homeassistant-axscend
 """
 
 from __future__ import annotations
