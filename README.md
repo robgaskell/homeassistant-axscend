@@ -60,7 +60,7 @@ You obtain the API token and Asset ID from your Axscend environment (for example
    - Search for **“Axscend Integration”** and install it.
 3. If it is **not yet in the default store**:
    - Go to **HACS → Integrations → ⋮ → Custom repositories**.
-   - Add repository: `https://github.com/robgaskell/homeassistant_axscend`  
+   - Add repository: `https://github.com/robgaskell/homeassistant-axscend`  
      Category: **Integration**.
    - Save, then search for **“Axscend Integration”** in HACS and install it.
 4. Restart Home Assistant when prompted.
@@ -168,7 +168,7 @@ All entities belong to a device named `Axscend Asset <asset_id>` so you can easi
     - Home Assistant has a valid home latitude/longitude configured under **Settings → System → General → Home**.
 
 If you run into issues that look like a bug in the integration itself, please open an issue on the GitHub issue tracker:  
-`https://github.com/robgaskell/homeassistant_axscend/issues`
+`https://github.com/robgaskell/homeassistant-axscend/issues`
 
 ---
 

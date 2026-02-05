@@ -5,8 +5,8 @@
     "@robgaskell"
   ],
   "config_flow": true,
-  "documentation": "https://github.com/robgaskell/homeassistant_axscend",
+  "documentation": "https://github.com/robgaskell/homeassistant-axscend",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/robgaskell/homeassistant_axscend/issues",
+  "issue_tracker": "https://github.com/robgaskell/homeassistant-axscend/issues",
   "version": "0.1.0"
 }
