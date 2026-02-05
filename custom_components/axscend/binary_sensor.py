@@ -101,7 +101,9 @@ class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
 
         # Get home location radius from Home Assistant configuration
         # Default to 100m if not configured
-        home_radius = self.hass.config.radius if self.hass.config.radius is not None else 100
+        home_radius = (
+            self.hass.config.radius if self.hass.config.radius is not None else 100
+        )
 
         # Get asset GPS coordinates
         asset_data = self.coordinator.data.get("asset", {})
