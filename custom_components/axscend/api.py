@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
 import socket
 from typing import Any
 
 import aiohttp
-import async_timeout
 
 from .const import API_BASE_URL, API_TIMEOUT, API_USER_AGENT
 
@@ -70,7 +70,7 @@ class AxscendApiClient:
             headers["Authorization"] = f"Bearer {self._api_token}"
             headers["User-Agent"] = f"{API_USER_AGENT}"
 
-            async with async_timeout.timeout(API_TIMEOUT):
+            async with asyncio.timeout(API_TIMEOUT):
                 response = await self._session.request(
                     method=method,
                     url=url,

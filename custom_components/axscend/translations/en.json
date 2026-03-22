@@ -4,13 +4,13 @@
             "user": {
                 "description": "If you need help with the configuration, see the documentation.",
                 "data": {
-                    "username": "Username",
-                    "password": "Password"
+                    "api_token": "API Token",
+                    "asset_id": "Asset ID"
                 }
             }
         },
         "error": {
-            "auth": "Username/Password is wrong.",
+            "auth": "Invalid API token or Asset ID.",
             "connection": "Unable to connect to the server.",
             "unknown": "Unknown error occurred."
         },

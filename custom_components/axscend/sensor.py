@@ -121,15 +121,17 @@ class AxscendAssetSensor(IntegrationBlueprintEntity, SensorEntity):
     ) -> str | int | float | datetime | None:
         """Extract the appropriate value from asset data based on key."""
         extractors = {
-            "asset_name": lambda: asset_data.get("name")
-            if asset_data.get("name")
-            else None,
-            "latitude": lambda: str(asset_data.get("gps_latitude"))
-            if asset_data.get("gps_latitude")
-            else None,
-            "longitude": lambda: str(asset_data.get("gps_longitude"))
-            if asset_data.get("gps_longitude")
-            else None,
+            "asset_name": lambda: asset_data.get("name") or None,
+            "latitude": lambda: (
+                str(asset_data.get("gps_latitude"))
+                if asset_data.get("gps_latitude") is not None
+                else None
+            ),
+            "longitude": lambda: (
+                str(asset_data.get("gps_longitude"))
+                if asset_data.get("gps_longitude") is not None
+                else None
+            ),
             "last_movement": lambda: self._get_timestamp_iso8601(
                 asset_data.get("last_movement_timestamp")
             ),
