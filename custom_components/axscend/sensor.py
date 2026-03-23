@@ -12,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 
-from .entity import IntegrationBlueprintEntity
+from .entity import AxscendEntity
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -74,7 +74,7 @@ async def async_setup_entry(
     )
 
 
-class AxscendAssetSensor(IntegrationBlueprintEntity, SensorEntity):
+class AxscendAssetSensor(AxscendEntity, SensorEntity):
     """Axscend Asset Sensor class."""
 
     def __init__(

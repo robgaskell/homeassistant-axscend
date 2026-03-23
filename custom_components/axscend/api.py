@@ -91,7 +91,7 @@ class AxscendApiClient:
                 msg,
             ) from exception
         except Exception as exception:  # pylint: disable=broad-except
-            msg = f"Something really wrong happened! - {exception}"
+            msg = f"Unexpected error communicating with Axscend API - {exception}"
             raise AxscendApiClientError(
                 msg,
             ) from exception
