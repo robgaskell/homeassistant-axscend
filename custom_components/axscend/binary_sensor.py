@@ -11,7 +11,7 @@ from homeassistant.components.binary_sensor import (
     BinarySensorEntityDescription,
 )
 
-from .entity import IntegrationBlueprintEntity
+from .entity import AxscendEntity
 
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
@@ -52,14 +52,13 @@ def _haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> f
 
 
 async def async_setup_entry(
-    hass: HomeAssistant,
+    hass: HomeAssistant,  # noqa: ARG001 Unused function argument: `hass`
     entry: AxscendConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the binary_sensor platform."""
     async_add_entities(
         AxscendAtHomeBinarySensor(
-            hass=hass,
             coordinator=entry.runtime_data.coordinator,
             entity_description=entity_description,
         )
@@ -67,19 +66,17 @@ async def async_setup_entry(
     )
 
 
-class AxscendAtHomeBinarySensor(IntegrationBlueprintEntity, BinarySensorEntity):
+class AxscendAtHomeBinarySensor(AxscendEntity, BinarySensorEntity):
     """Axscend binary_sensor class for home presence detection."""
 
     def __init__(
         self,
-        hass: HomeAssistant,
         coordinator: AxscendDataUpdateCoordinator,
         entity_description: BinarySensorEntityDescription,
     ) -> None:
         """Initialize the binary_sensor class."""
         super().__init__(coordinator)
         self.entity_description = entity_description
-        self.hass = hass
         asset_id = coordinator.config_entry.runtime_data.asset_id
         # Ensure unique ID per entity
         self._attr_unique_id = (

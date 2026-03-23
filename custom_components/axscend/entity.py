@@ -1,4 +1,4 @@
-"""BlueprintEntity class."""
+"""Axscend base entity class."""
 
 from __future__ import annotations
 
@@ -9,8 +9,8 @@ from .const import ATTRIBUTION
 from .coordinator import AxscendDataUpdateCoordinator
 
 
-class IntegrationBlueprintEntity(CoordinatorEntity[AxscendDataUpdateCoordinator]):
-    """BlueprintEntity class."""
+class AxscendEntity(CoordinatorEntity[AxscendDataUpdateCoordinator]):
+    """Axscend base entity class."""
 
     _attr_attribution = ATTRIBUTION
 
