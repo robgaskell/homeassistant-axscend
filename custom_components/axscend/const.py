@@ -1,6 +1,8 @@
 """Constants for axscend."""
 
+import json
 from logging import Logger, getLogger
+from pathlib import Path
 
 LOGGER: Logger = getLogger(__package__)
 
@@ -12,4 +14,6 @@ CONF_ASSET_ID = "asset_id"
 
 API_BASE_URL = "https://api.axscend.com/v3"
 API_TIMEOUT = 10  # seconds
-API_USER_AGENT = "HomeAssistantAxscendIntegration/0.1.2"
+
+_manifest = json.loads((Path(__file__).parent / "manifest.json").read_text())
+API_USER_AGENT = f"HomeAssistantAxscendIntegration/{_manifest['version']}"
