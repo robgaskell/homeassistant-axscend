@@ -12,4 +12,4 @@ CONF_ASSET_ID = "asset_id"
 
 API_BASE_URL = "https://api.axscend.com/v3"
 API_TIMEOUT = 10  # seconds
-API_USER_AGENT = "HomeAssistantAxscendIntegration/0.1.1"
+API_USER_AGENT = "HomeAssistantAxscendIntegration/0.1.2"
