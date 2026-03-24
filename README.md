@@ -1,5 +1,11 @@
 # Axscend Integration for Home Assistant
 
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![GitHub Release](https://img.shields.io/github/release/robgaskell/homeassistant-axscend.svg)](https://github.com/robgaskell/homeassistant-axscend/releases)
+[![Downloads](https://img.shields.io/github/downloads/robgaskell/homeassistant-axscend/total)](https://github.com/robgaskell/homeassistant-axscend/releases)
+[![Validate](https://github.com/robgaskell/homeassistant-axscend/actions/workflows/validate.yml/badge.svg)](https://github.com/robgaskell/homeassistant-axscend/actions/workflows/validate.yml)
+[![License](https://img.shields.io/github/license/robgaskell/homeassistant-axscend)](LICENSE)
+
 A Home Assistant custom integration for [Axscend](https://axscend.com) asset tracking. It polls the Axscend API every 5 minutes and exposes your asset's location and status as Home Assistant entities.
 
 ## Features
@@ -16,7 +22,7 @@ A Home Assistant custom integration for [Axscend](https://axscend.com) asset tra
 
 1. Open HACS in your Home Assistant instance.
 2. Go to **Integrations** → **Custom repositories**.
-3. Add `https://github.com/robgaskell/homeassistant_axscend` as an **Integration**.
+3. Add `https://github.com/robgaskell/homeassistant-axscend` as an **Integration**.
 4. Search for **Axscend** and install it.
 5. Restart Home Assistant.
 
